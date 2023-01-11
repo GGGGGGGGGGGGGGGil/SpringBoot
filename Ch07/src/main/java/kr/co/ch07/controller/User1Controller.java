@@ -22,7 +22,7 @@ public class User1Controller {
 		List<User1VO> users = service.selectUser1s();
 		model.addAttribute("users", users);
 		
-		return"/user1/list";
+		return "/user1/list";
 	}
 	
 	@GetMapping("/user1/register")
@@ -45,6 +45,13 @@ public class User1Controller {
 	@PostMapping("/user1/modify")
 	public String modify(User1VO vo) {
 		service.updateUser1(vo);
+		
+		return "redirect:/user1/list";
+	}
+	
+	@GetMapping("/user1/delete")
+	public String delete(String uid) {
+		service.deleteUser1(uid);
 		
 		return "redirect:/user1/list";
 	}

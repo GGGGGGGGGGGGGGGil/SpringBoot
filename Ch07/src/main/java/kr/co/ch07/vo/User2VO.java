@@ -16,8 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name="user1")
-public class User1VO {
+@Table(name = "user2")
+public class User2VO {
 	
 	@Id
 	private String uid;
