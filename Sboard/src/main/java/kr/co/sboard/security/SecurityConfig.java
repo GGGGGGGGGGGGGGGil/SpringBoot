@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -20,32 +21,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// 접근 권한 설정
+		
+		// 인가(접근권한) 설정
 		http.authorizeRequests().antMatchers("/").permitAll(); //permitAll - 모든 사용자 허용
-		// 게스트는 permitAll로 처리 하면되서 따로 설정할 필요X
+		http.authorizeRequests().antMatchers("/list").hasAnyRole("2", "3", "4", "5"); //앞에 Roll_ 생략가능
+		http.authorizeRequests().antMatchers("/write").hasAnyRole("3", "4", "5");
+		http.authorizeRequests().antMatchers("/view").hasAnyRole("3", "4", "5");
+		http.authorizeRequests().antMatchers("/modify").hasAnyRole("3", "4", "5");
 		
 		// 사이트 위조 방지 설정 - 배포할때는 꺼야함
 		http.csrf().disable();
 		
-		/* 나중에 인증 필요하면 써야함
-		// 로그인 설정
+		// 로그인 설정(나중에 인증 필요하면 써야함)
 		http.formLogin()
-		.loginPage("/user2/login")
-		.defaultSuccessUrl("/user2/loginSuccess")
+		.loginPage("/user/login")
+		.defaultSuccessUrl("/list")
+		.failureUrl("/user/login?success=100")
 		.usernameParameter("uid")
 		.passwordParameter("pass");
 		
-		
-		// 로그아웃 설정(나중에 재설정 필요)
+		// 로그아웃 설정
 		http.logout()
 		.invalidateHttpSession(true)
-		.logoutRequestMatcher(new AntPathRequestMatcher("/user2/logout"))
-		.logoutSuccessUrl("/user2/login");
-		*/
+		.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+		.logoutSuccessUrl("/user/login?success=200");
 	}
 	
-	//@Autowired
-	//private User2Service service;
+	@Autowired
+	private SecurityUserService userService;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -55,7 +58,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//auth.inMemoryAuthentication().withUser("member").password("{noop}1234").roles("MEMBER"); //noop으로 암호화된 비번을 평문화 해줌
 		
 		//로그인 인증 처리 서비스, 암호화 방식 설정
-		//auth.userDetailsService(service).passwordEncoder(new MessageDigestPasswordEncoder("SHA-256"));
-		//auth.userDetailsService(service).passwordEncoder(new BCryptPasswordEncoder());
+		//예전 방식 처리 auth.userDetailsService(userService).passwordEncoder(new MessageDigestPasswordEncoder("SHA-256"));
+		auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
+	}
+	
+	@Bean
+	public PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
 	}
 }

@@ -2,47 +2,48 @@ package kr.co.sboard.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import kr.co.sboard.entity.UserEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder 
 public class MyUserDetails implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	
-	private String uid;
-	private String pass;
-	private String name;
-	private String hp;
-	private int age;
-	private String rdate;
-	
 	//시큐리티에서 사용자 정보 객체를 커스텀해서 만듬
+	private UserEntity user;
+	
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// 계정이 갖는 권한목록 리턴
-		Collection<GrantedAuthority> collector = new ArrayList<>();
+		List<GrantedAuthority> authoritiies = new ArrayList<>();
+		authoritiies.add(new SimpleGrantedAuthority("ROLE_"+user.getGrade())); //ROLE_ 로 무조건 시작! 
 		
-		return collector;
+		return authoritiies;
 	}
 
 	@Override
 	public String getPassword() {
 		// 계정이 갖는 비밀번호
 		
-		return pass;
+		return user.getPass();
 	}
 
 	@Override
 	public String getUsername() {
 		// 계정이 갖는 아이디
 		
-		return uid;
+		return user.getUid();
 	}
 
 	@Override
