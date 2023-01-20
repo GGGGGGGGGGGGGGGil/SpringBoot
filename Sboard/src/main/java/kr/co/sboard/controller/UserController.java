@@ -23,16 +23,16 @@ public class UserController {
 	private UserService service;
 	
 	
-	@GetMapping("/user/login")
+	@GetMapping("user/login")
 	public String login() {
-		return "/user/login";
+		return "user/login";
 	}
 	
-	@GetMapping("/user/register")
+	@GetMapping("user/register")
 	public String register() {
-		return "/user/register";
+		return "user/register";
 	}
-	@PostMapping("/user/register")
+	@PostMapping("user/register")
 	public String register(UserEntity vo, HttpServletRequest req) {
 		String regip = req.getRemoteAddr();
 		vo.setRegip(regip);
@@ -42,16 +42,16 @@ public class UserController {
 		return "redirect:/user/login?success="+result;
 	}
 	
-	@GetMapping("/user/terms")
+	@GetMapping("user/terms")
 	public String terms(Model model) {
 		TermsVO vo = service.selectTerms();
 		model.addAttribute(vo);
 		
-		return "/user/terms";
+		return "user/terms";
 	}
 	
 	@ResponseBody //ajax로 받아서 json으로 출력하기 위한 어노테이션
-	@GetMapping("/user/checkUid")
+	@GetMapping("user/checkUid")
 	public Map<String, Integer> checkUid(String uid) {
 		int result = service.countUser(uid);
 		
@@ -62,7 +62,7 @@ public class UserController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/user/checkNick")
+	@GetMapping("user/checkNick")
 	public Map<String, Integer> checkNick(String nick) {
 		int result = service.countNick(nick);
 		

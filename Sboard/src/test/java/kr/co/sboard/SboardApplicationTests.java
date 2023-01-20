@@ -1,4 +1,4 @@
-package SBoard;
+package kr.co.sboard;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
