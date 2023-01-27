@@ -1,16 +1,26 @@
 package kr.co.farmstory.controller;
 
+import kr.co.farmstory.service.ArticleService;
+import kr.co.farmstory.vo.ArticleVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
 public class BoardController {
 
+    @Autowired
+    private ArticleService service;
+
     @GetMapping("board/list")
-    public String list(Model model, String group, String cate){
-        model.addAttribute("group", group);
-        model.addAttribute("cate", cate);
+    public String list(Model model){
+        List<ArticleVO> articles = service.selectArticles();
+
+        model.addAttribute("articles", articles);
+
         return "board/list";
     }
 

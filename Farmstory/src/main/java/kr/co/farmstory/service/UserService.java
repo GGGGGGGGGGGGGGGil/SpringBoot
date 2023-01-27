@@ -20,7 +20,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public int insertUser(UserEntity vo) {
-        vo.setPass(passwordEncoder.encode(vo.getPass()));
+        vo.setPass(passwordEncoder.encode(vo.getPass2()));
 
         int result = dao.insertUser(vo);
 
@@ -29,5 +29,10 @@ public class UserService {
     public TermsVO selectTerms() {
         return dao.selectTerms();
     }
-
+    public int countUser(String uid){
+        return repo.countByUid(uid);
+    }
+    public int countNick(String nick){
+        return repo.countByNick(nick);
+    }
 }

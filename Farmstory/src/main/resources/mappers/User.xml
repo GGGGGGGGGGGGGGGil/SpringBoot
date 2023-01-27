@@ -22,5 +22,4 @@
         select * from `board_terms`;
     </select>
 
-
 </mapper>

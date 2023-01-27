@@ -8,8 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -29,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("user/register")
-    public String register(UserEntity vo, HttpServletRequest req){
+    public String register(UserEntity vo, HttpServletRequest req) {
         String regip = req.getRemoteAddr();
         vo.setRegip(regip);
 
@@ -44,5 +47,25 @@ public class UserController {
         model.addAttribute(vo);
 
         return "user/terms";
+    }
+    @ResponseBody
+    @GetMapping("user/checkUid")
+    public Map<String, Integer> checkUid(String uid){
+        int result = service.countUser(uid);
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", result);
+
+        return map;
+    }
+    @ResponseBody
+    @GetMapping("user/checkNick")
+    public Map<String, Integer> checkNick(String nick){
+        int result = service.countNick(nick);
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", result);
+
+        return map;
     }
 }
