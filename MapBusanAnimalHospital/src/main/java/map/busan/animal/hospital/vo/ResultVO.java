@@ -34,7 +34,7 @@ public class ResultVO {
             @Getter
             @Setter
             public class Items {
-                private String item;
+                private ItemVO[] item;
             }
         }
     }
